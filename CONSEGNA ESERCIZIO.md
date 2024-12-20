@@ -1,3 +1,8 @@
+# PUBLIC LINK (DIAGRAM)
+
+https://drive.google.com/file/d/1Ygu5JXzlxUKPFoXTjBfrq0hAT2x6I-iU/view?usp=sharing
+
+
 # TITLE
 
 Esercizio di oggi:
