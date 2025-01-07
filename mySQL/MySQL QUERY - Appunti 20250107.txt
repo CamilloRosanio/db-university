@@ -1,0 +1,71 @@
+*********************************************************************************
+STEP PER ESERCIZIO E IMPORT DB:
+Server -> Data import -> Import from self-contained file -> nuovo DB -> inizio a lavorarci
+*********************************************************************************
+
+BONUS:
+Scrivere QUERY per cancellazione riga secondo un criterio (ad esempio "id").
+
+
+*****QUERY CON WHERE PER FILTRARE SOLO CAMPI CONTENENTI NULL
+Si usa il WHERE ma al posto dell' "=" per esempio, si usa IS.
+WHERE `nome_campo` IS NULL
+
+*****QUERY PER SELEZIONARE TUTTE LE COLONNE DEI TEACHERS
+SELECT *
+FROM `university`.`teachers`;
+
+*****QUERY PER SELEZIONARE SOLO LE COLONNE INDICATE (name, phone) DEI TEACHERS
+SELECT `name`,`phone`
+FROM `university`.`teachers`;
+
+*****QUERY PER SELEZIONARE SOLO I CORSI CON PIU' DI 10 CFU
+SELECT *
+FROM `university`.`courses`
+WHERE `cfu` > 10;
+
+*****QUERY PER CONTARE IL NUMERO DI RIGHE DEI SOLI CORSI CON PIU' DI 10 CFU
+SELECT COUNT(`id`)
+FROM `university`.`courses`
+WHERE `cfu` > 10;
+
+*****QUERY PER CONTARE IL NUMERO DI RIGHE DEI SOLI CORSI CON PIU' DI 10 CFU AGGREGATI PER ANNO
+SELECT COUNT(`id`) AS `number_of_records`, GROUP BY `year`
+FROM `university`.`courses`
+WHERE `cfu` > 10;
+
+*****QUERY PER CONTARE IL NUMERO DI SITI DEI SOLI CORSI CON PIU' DI 10 CFU DOVE I NULL SARANNO ESCLUSI DAL CONTEGGIO
+SELECT COUNT(`website`) AS `courses_with_website`
+FROM `university`.`courses`
+WHERE `cfu` > 10;
+
+*****QUERY CON WHERE E HAVING
+Bisogna rispettare assolutamente l'ordine dei 3 elementi, nel modo che segue.
+HAVING non può mai essere prima del GROUP BY, questo perchè si segue un filo ligico delle operazioni dove per esempio dei campi calcolati non esistono fino al GROUP BY, per cui non possono essere usati prima del raggruppamento dall'HAVING.
+- WHERE (filtra in base a un criterio applicato alle colonne della SELECT)
+- GROUP BY (raggruppa in base a un criterio applicato a una delle colonne della SELECT)
+- HAVING (filtra in base a un campo calcolato in seguito al GROUP BY o alla colonna usata per il GROUP BY).
+
+*****ORDINE DELLE RIGHE TRAMITE ORDER BY
+ORDER BY è sempre alla fine della query, e ordina le righe in base al dato in colonna.
+Per l'ordine ascendente o discendente si aggiunge ASC / DESC, dove il default è ASC.
+
+*****SELEZIONARE TUTTI GLI STUDENTI IL CUI NOME INIZIA PER "E"
+Si utilizza il WHERE combinato con il LIKE. Se metto un "=" invece intendo exact-match.
+Il LIKE è invece un broad-match che NON è case-sensitive.
+Se nella stringa del WHERE uso LIKE "A%", il "%" dopo la prima lettera si legge come "stringa che inizia con A a prescindere da cosa c'è dopo".
+Posso anche scrivere LIKE "A%o" intendendo "Stringa che inizia con A e finisce con o".
+Se voglio dire invece "che contiene" scrivo LIKE "%a%", a prescindere dalla posizione di quella stringa, inizio/fine/in mezzo.
+SELECT `name` AS `studenti_con_iniziale_e`
+FROM `university`.`students`
+WHERE `name` LIKE "E%";
+
+*****QUERY IN BASE A UNA DATA
+Si usa il WHERE come filtro, però i campit DATE non sono stringhe ma tipo DATE, quindi non posso usare "2021%" ad esempio.
+DIVERSO DA si scrive "<>".
+Il VALUE che indica la data deve essere scritto con una certa sintassi (appartenente ai field di tipo DATE) come ad esempio "YYYY-MM-DD" o addirittura specificando l'orario secondo sintassi corretta.
+Continuando: per le date scrivo ad esempio:
+WHERE YEAR(`nome_campo`) = 2021 (posso anche usare MONTH / DAY)
+oppure
+WHERE `nome_campo` BETWEEN "2021-01-01" AND "2021-12-31";
+Volendo potrei accorpare anche ulteriori condizioni AND / OR al seguito per filtrare ulteriormente.
