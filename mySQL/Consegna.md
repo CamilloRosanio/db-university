@@ -30,6 +30,12 @@ FROM `university`.`exams`
 WHERE	DATE(`date`) = "2020-06-20" AND
 		TIME(`hour`) > "14:00:00";
 
+Correzione con soluzione più compatta. Non serve specificare DATE o TIME in quanto quei campi sono già in quel formato, e non dobbiamo scorporare un YEAR o HOUR da una data più complessa contenente magari DATE e TIME insieme.
+SELECT `id`, `date`, `hour`
+FROM `university`.`exams`
+WHERE	`date` = "2020-06-20" AND
+		`hour` > "14:00:00";
+
 6. Selezionare tutti i corsi di laurea magistrale (38)
 SELECT `id`, `name`, `level`
 FROM `university`.`degrees`
@@ -39,18 +45,30 @@ WHERE `level` = "magistrale";
 SELECT COUNT(*)
 FROM `university`.`departments`;
 
-8. Quanti sono gli insegnanti che non hanno un numero di telefono? (50)
+Soluzione MOLTO migliore dal punto di vista della performance, dove conteggio 1 solo field invece che tutti, perchè già mi basta.
+Se lasciassi COUNT(*) l'operazione controllerebbe ogni singola cella, quando in realtà basta fare il COUNT con gli "id" o in generale la PRIMARY KEY.
+NOTA: ricordare che il COUNT non tiene conto dei NULL e non li aggiunge al conteggio.
+SELECT COUNT(`id`)
+FROM `university`.`departments`;
+
+8. Quanti sono gli insegnanti che NON hanno un numero di telefono? (50)
 SELECT `id`, `name`, `surname`, `phone`
 FROM `university`.`teachers`
 WHERE `phone` IS null;
 
+Correzione: in questo caso la consegna chiede "quanti" quindi bisognava utilizzare un COUNT e non generare la tabella multi-riga.
+Anche qui bastava fare SELECT COUNT(`id`).
+
 9. Inserire nella tabella degli studenti un nuovo record con i propri dati (per il campo
-degree_id, inserire un valore casuale)
+degree_id, inserire un valore casuale).
+In questo caso bisogna ignorare "id" che avendo l'AUTO-INCREMENT viene assegnato in modo automatizzato.
+Inoltre inserire "forzatamente" l' "id" può comportare la rottura dell'AUTO-INCREMENT.
 INSERT INTO `university`.`students` (`degree_id`, `name`, `surname`, `date_of_birth`, `fiscal_code`, `enrolment_date`, `registration_number`, `email`)
 VALUES ("75", "Camillo", "Rosanio", "1992-12-20", "ABCDEF92T10C123C", "2012-01-01", "12345", "pincopallo@iloveboolean.it");
 
 10. Cambiare il numero dell’ufficio del professor Pietro Rizzo in 126
 NOTA: necessario disabilitare la Safe Mode in Prefereces.
+ATTENZIONE: in questo caso sappiamo che c'è un solo "Pietro", ma si lavora solo e soltanto con l' "id" perchè se ci fossero omonimie si rischierebbe di fare un UPDATE su 2 o più record.
 UPDATE `university`.`teachers`
 SET `office_number` = "126"
 WHERE `name` = "Pietro";
@@ -81,7 +99,7 @@ FROM `university`.`exam_student`
 GROUP BY `exam_id`;
 
 4. Contare quanti corsi di laurea ci sono per ogni dipartimento
-SELECT `department_id`,COUNT(*) AS `available_degrees`
+SELECT `department_id`, COUNT(*) AS `available_degrees`
 FROM `university`.`degrees`
 GROUP BY `department_id`
 ORDER BY `available_degrees` DESC;

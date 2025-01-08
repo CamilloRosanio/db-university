@@ -52,7 +52,7 @@ Per l'ordine ascendente o discendente si aggiunge ASC / DESC, dove il default è
 
 *****SELEZIONARE TUTTI GLI STUDENTI IL CUI NOME INIZIA PER "E"
 Si utilizza il WHERE combinato con il LIKE. Se metto un "=" invece intendo exact-match.
-Il LIKE è invece un broad-match che NON è case-sensitive.
+Il LIKE è invece un broad-match che NON è case-sensitive, e cioè è case-insensitive.
 Se nella stringa del WHERE uso LIKE "A%", il "%" dopo la prima lettera si legge come "stringa che inizia con A a prescindere da cosa c'è dopo".
 Posso anche scrivere LIKE "A%o" intendendo "Stringa che inizia con A e finisce con o".
 Se voglio dire invece "che contiene" scrivo LIKE "%a%", a prescindere dalla posizione di quella stringa, inizio/fine/in mezzo.
