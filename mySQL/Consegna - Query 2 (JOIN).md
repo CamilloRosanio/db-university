@@ -94,6 +94,9 @@ ON `departments`.`id` = `degrees`.`department_id`
 WHERE `departments`.`name` = "Dipartimento di Matematica"
 GROUP BY `teachers`.`id`;
 
+Correzione: soluzione con SELECT DISTINCT, operazione molto più leggera.
+Si poteva usare una SELECT DISTINCT che elimina i doppioni, quindi il risultato (i questo caso) è uguale al GROUP BY.
+
 7. BONUS: Selezionare per ogni studente il numero di tentativi sostenuti
 per ogni esame, stampando anche il voto massimo. Successivamente,
 filtrare i tentativi con voto minimo 18.
@@ -108,3 +111,19 @@ JOIN `university`.`students`
 ON `students`.`id` = `exam_student`.`student_id`
 WHERE `exam_student`.`vote` >= 18
 GROUP BY `exam_student`.`student_id`;
+
+Correzione: soluzione corretta con utilizzo di un doppio GROUP BY + HAVING.
+Uso HAVING perchè devo scremare i dati solo DOPO aver eseguito l'aggregazione, altrimenti lavorerei su una base dati non completa.
+In altri termini, è HAVING alla fine che screma tramite il voto MAX, quindi escludo tutti gli studenti che NON hanno passato l'esame.
+
+SELECT
+    `exam_student`.`student_id`,
+    COUNT(`exam_student`.`student_id`) AS `numero_tentativi`,
+    MAX(`exam_student`.`vote`) AS `voto_assimo`
+FROM `exam_student`
+INNER JOIN `students`
+ON `students`.`id` = `exam_student`.`student_id`
+GROUP BY
+    `exam_student`.`student_id`,
+    # qui devo filtrare per ID del Corso (non c'è scritto il JOIN della tabella ma dovrebbe esserci)
+HAVING MAX(`exam_student`.`vote`) >= 18;
